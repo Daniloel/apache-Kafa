@@ -2,6 +2,7 @@ package com.Danilo.strConsumer.listener;
 
 
 import com.Danilo.strConsumer.custom.StrConsumerCustomListener;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
@@ -22,10 +23,11 @@ public class StrConsumerListener {
         @TopicPartition(topic = "strTopic",partitions = {"0"})
             }, containerFactory = "strContainerFactory")*/
  //  Como foi estilizado o listener essa para supeior sai e vem a customização feita na classe StroCosumerCostumerListener
-
+@SneakyThrows
  @StrConsumerCustomListener(groupId = "group-1")
     public  void LOG (String message){
         log.info("LOG ::: Receive message {}",message);
+        throw new IllegalAccessException("Pegando uma excessão");
     }
 
     //teste que mostram que podem haver vários consumidore para o mesmo topic
@@ -42,7 +44,7 @@ public class StrConsumerListener {
 
     //A principio só tem duas partição sendon assim esse aqui vai mudar de grupo e vai estar assinado nas duas pois no grupo 1 já esta preenchido
    /* @KafkaListener(groupId = "group-2", topics = "strTopic", containerFactory = "strContainerFactory")*/
-    @StrConsumerCustomListener(groupId = "group-2")
+    @KafkaListener(groupId = "group-2", topics = "strTopic", containerFactory = "validMessageContainerFactory")
     public  void HISTORY(String message){
         log.info("HISTORY ::: Receive message {}",message);
     }
